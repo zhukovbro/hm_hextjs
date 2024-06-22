@@ -1,0 +1,60 @@
+name: Build and Deploy Docker Image for Next2
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build Docker image
+        run: |
+          docker build -t next2:latest .
+          docker save next2:latest | gzip > next2.tar.gz
+
+      - name: Upload Docker image to GitHub artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: next2-image
+          path: next2.tar.gz
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download Docker image from GitHub artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: next2-image
+          path: .
+
+      - name: Copy Docker image to VPS
+        uses: appleboy/scp-action@v0.1.0
+        with:
+          source: "next2.tar.gz"
+          target: "/root/docker_images/next2.tar.gz"
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_KEY }}
+          port: ${{ secrets.VPS_PORT }}
+
+      - name: Deploy to VPS
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_KEY }}
+          port: ${{ secrets.VPS_PORT }}
+          script: |
+            gunzip /root/docker_images/next2.tar.gz
+            docker load -i /root/docker_images/next2.tar
+            docker stop next2 || true
+            docker rm next2 || true
+            docker run -d -p 3004:3000 --name next2 next2:latest
