@@ -1,4 +1,4 @@
-name: Build and Deploy Docker Image for Next23
+name: Build and Deploy Docker Image for Next2
 
 on:
   push:
@@ -56,8 +56,9 @@ jobs:
           password: ${{ secrets.VPS_PASSWORD }}
           port: ${{ secrets.VPS_PORT }}
           script: |
-            gunzip /root/docker_images/next2.tar.gz
-            docker load -i /root/docker_images/next2.tar
+            cd /root/docker_images
+            gunzip next2.tar.gz
+            docker load -i next2.tar
             docker stop next2 || true
             docker rm next2 || true
             docker run -d -p 3004:3000 --name next2 next2:latest
