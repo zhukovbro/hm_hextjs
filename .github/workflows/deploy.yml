@@ -15,7 +15,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build
+          docker build -t next2:latest .
           docker save next2:latest | gzip > next2.tar.gz
 
       - name: Upload Docker image to GitHub artifacts
