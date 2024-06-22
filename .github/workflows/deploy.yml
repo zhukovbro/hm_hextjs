@@ -39,7 +39,7 @@ jobs:
         uses: appleboy/scp-action@v0.1.0
         with:
           source: "next2.tar"
-          target: "/root/docker_images/next2.tar"
+          target: "/root/docker_images/"
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           password: ${{ secrets.VPS_PASSWORD }}
@@ -58,3 +58,4 @@ jobs:
             docker stop next2 || true
             docker rm next2 || true
             docker run -d -p 3004:3000 --name next2 next2:latest
+          debug: true
