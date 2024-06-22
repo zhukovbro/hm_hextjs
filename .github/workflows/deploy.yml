@@ -35,19 +35,6 @@ jobs:
           name: next2-image
           path: .
 
-      - name: Check SSH key
-        run: echo "${{ secrets.VPS_KEY }}"
-
-      - name: Test SSH connection
-        uses: appleboy/ssh-action@v0.1.0
-        with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USER }}
-          key: ${{ secrets.VPS_KEY }}
-          port: ${{ secrets.VPS_PORT }}
-          script: |
-            echo "SSH connection test successful"
-
       - name: Copy Docker image to VPS
         uses: appleboy/scp-action@v0.1.0
         with:
@@ -59,7 +46,7 @@ jobs:
           port: ${{ secrets.VPS_PORT }}
 
       - name: Deploy to VPS
-        uses: appleboy/ssh-action@v0.1.0
+        uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
