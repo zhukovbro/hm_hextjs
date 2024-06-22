@@ -15,7 +15,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build --platform linux/amd64 -t next2:latest .
+          docker build
           docker save next2:latest | gzip > next2.tar.gz
 
       - name: Upload Docker image to GitHub artifacts
@@ -34,9 +34,6 @@ jobs:
         with:
           name: next2-image
           path: .
-
-      - name: Check SSH password
-        run: echo "Using SSH password for authentication"
 
       - name: Copy Docker image to VPS
         uses: appleboy/scp-action@v0.1.0
