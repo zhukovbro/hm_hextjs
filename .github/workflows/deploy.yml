@@ -1,4 +1,4 @@
-name: Build and Deploy Docker Image for Next234
+name: Build and Deploy Docker Image for Next2
 
 on:
   push:
@@ -16,13 +16,14 @@ jobs:
       - name: Build Docker image
         run: |
           docker build -t next2:latest .
-          docker save next2:latest | gzip > next2.tar.gz
+          docker save next2:latest -o next2.tar
+          zip next2.zip next2.tar
 
       - name: Upload Docker image to GitHub artifacts
         uses: actions/upload-artifact@v2
         with:
           name: next2-image
-          path: next2.tar.gz
+          path: next2.zip
 
   deploy:
     needs: build
@@ -38,8 +39,8 @@ jobs:
       - name: Copy Docker image to VPS
         uses: appleboy/scp-action@v0.1.0
         with:
-          source: "next2.tar.gz"
-          target: "/root/docker_images/next2.tar.gz"
+          source: "next2.zip"
+          target: "/root/docker_images/next2.zip"
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           password: ${{ secrets.VPS_PASSWORD }}
@@ -54,7 +55,7 @@ jobs:
           port: ${{ secrets.VPS_PORT }}
           script: |
             cd /root/docker_images
-            gunzip next2.tar.gz
+            unzip next2.zip
             docker load -i next2.tar
             docker stop next2 || true
             docker rm next2 || true
