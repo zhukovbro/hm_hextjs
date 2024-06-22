@@ -17,13 +17,12 @@ jobs:
         run: |
           docker build -t next2:latest .
           docker save next2:latest -o next2.tar
-          zip next2.zip next2.tar
 
       - name: Upload Docker image to GitHub artifacts
         uses: actions/upload-artifact@v2
         with:
           name: next2-image
-          path: next2.zip
+          path: next2.tar
 
   deploy:
     needs: build
@@ -39,8 +38,8 @@ jobs:
       - name: Copy Docker image to VPS
         uses: appleboy/scp-action@v0.1.0
         with:
-          source: "next2.zip"
-          target: "/root/docker_images/next2.zip"
+          source: "next2.tar"
+          target: "/root/docker_images/next2.tar"
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           password: ${{ secrets.VPS_PASSWORD }}
@@ -55,7 +54,6 @@ jobs:
           port: ${{ secrets.VPS_PORT }}
           script: |
             cd /root/docker_images
-            unzip next2.zip
             docker load -i next2.tar
             docker stop next2 || true
             docker rm next2 || true
