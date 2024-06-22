@@ -38,16 +38,6 @@ jobs:
       - name: Check SSH password
         run: echo "Using SSH password for authentication"
 
-      - name: Test SSH connection
-        uses: appleboy/ssh-action@v0.1.0
-        with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USER }}
-          password: ${{ secrets.VPS_PASSWORD }}
-          port: ${{ secrets.VPS_PORT }}
-          script: |
-            echo "SSH connection test successful"
-
       - name: Copy Docker image to VPS
         uses: appleboy/scp-action@v0.1.0
         with:
