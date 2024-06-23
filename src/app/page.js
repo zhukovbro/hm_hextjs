@@ -26,7 +26,7 @@ export default function LandingSix(){
             <div className="container relative">
                 <div className="grid grid-cols-1 justify-center text-center">
                     <div className="">
-                        <h1 className="font-bold lg:leading-normal leading-normal tracking-wide text-4xl lg:text-5xl capitalize mb-5">Qualified Business Consultancy 111111112333</h1>
+                        <h1 className="font-bold lg:leading-normal leading-normal tracking-wide text-4xl lg:text-5xl capitalize mb-5">111111112333</h1>
                         <p className="text-slate-400 text-lg max-w-xl mx-auto">Launch your campaign and benefit from our expertise on designing and managing conversion centered Tailwind CSS v3.x html page.</p>
                     
                         <div className="subcribe-form mt-6 mb-3">
