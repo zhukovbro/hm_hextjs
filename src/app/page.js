@@ -18,8 +18,6 @@ import {FaRegEnvelope, FiHexagon, FiChevronRight } from './assets/icons/icons'
 
 import {featureFive} from './Data/data'
 
-require('dotenv').config();
-
 const API_BASE_URL = process.env.API_BASE_URL;
 
 export default function LandingSix(){
