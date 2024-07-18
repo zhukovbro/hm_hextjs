@@ -1,4 +1,4 @@
-name: Build and Deploy Docker Image for Next2
+name: Build and Deploy Docker Image for Next234
 
 on:
   push:
@@ -14,8 +14,11 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Build Docker image
+        env:
+          API_BASE_URL: ${{ secrets.API_BASE_URL }}
         run: |
-          docker build -t next2:latest .
+          echo "Building Docker image with API_BASE_URL=$API_BASE_URL"
+          docker build -t next2:latest --build-arg API_BASE_URL=$API_BASE_URL .
           docker save next2:latest -o next2.tar
 
       - name: Upload Docker image to GitHub artifacts
@@ -59,3 +62,6 @@ jobs:
             docker rm next2 || true
             docker run -d -p 3004:3000 --name next2 next2:latest
           debug: true
+      - name: Clean up Docker
+        run: |
+          docker system prune -a -f
